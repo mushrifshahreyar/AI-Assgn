@@ -7,7 +7,7 @@ class Node:
         self.cost = cost
 
 actions = ["adjacentLeft", "adjacentRight", "1hopLeft", "1hopRight", "2hopLeft", "2hopRight"]
-exploredSet = []
+
 
 def childNode(parentNode, action):
     state = parentNode.state.copy()
@@ -80,12 +80,12 @@ def checkGoalState(node):
     n = len(state)
     foundBlack = False
     for i in range(n):
-        if(foundBlack and state[i] == "W"):
-            return False
         if(state[i] == "B"):
             foundBlack = True
-        else:
-            pass
+            continue
+        if(foundBlack and state[i] == "W"):
+            return False
+    
     return True
 
 def printTree(node):
@@ -95,49 +95,48 @@ def printTree(node):
         print(str(tempNode.state) + "\t"+ str(tempNode.cost))
         tempNode = tempNode.parent
 
-def hashValueFinder(state):
-    val = 0
-    for i in range(len(state)):
-        if(state[i] == "W"):
-            val += (11 * (i+1))
-        elif(state[i] == "B"):
-            val += (13 * (i+1))
-        else:
-            val += (15 * (i+1))
-
-    return val
-
-def findSolution(initialState):
+def BFS(initialState):
     
     headNode = Node(initialState, None, None, 0)
-    hashValue = hashValueFinder(headNode.state)
+    state = getStateSet(headNode.state)
     
     if(checkGoalState(headNode)):
         print("Already in Goal State")
         return
 
     queue = []
-    nActions = len(actions);
+    exploredSet = []
+
+    nActions = len(actions)
+    
     queue.append(headNode)
+
     while(len(queue) != 0):
         parentNode = queue.pop(0)
-        hashValue = hashValueFinder(parentNode.state)
-        try:
-            k = exploredSet.index(hashValue)
-            pass
-        except:
-            exploredSet.append(hashValue)
+        state = getStateSet(parentNode.state)
+
+        exploredSet.append(state)
         
         for i in range(nActions):
             node = childNode(parentNode, i)
             if(node != None):
                 if(checkGoalState(node)):
-                    # printTree(node)
-                    
+                    printTree(node)
                     print(str(headNode.state) + "\tReached Goal State\t" + str(node.cost))
-                    return
-                else:
+                    return node
+                
+                state = getStateSet(node.state)
+
+                if(state not in exploredSet):
                     queue.append(node)
+                
+    return None
+
+def getStateSet(state):
+    tState = ""
+    for s in state:
+        tState += str(s)
+    return tState
 
 def createInput(initialState):
     state = []
@@ -160,8 +159,7 @@ if __name__ == "__main__":
     with open("output.txt", "r") as f:
         initialStates = f.readlines()
         for initialState in initialStates:
-            # print(initialState)
-            findSolution(createInput(initialState))
+            BFS(createInput(initialState))
 
     
-    findSolution(state)
+    # BFS(createInput(initialState))

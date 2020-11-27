@@ -1,4 +1,5 @@
 import heapq
+from Q5_BFS import checkGoalState
 
 class Node:
     def __init__(self, state, action, parent, cost, priority):
@@ -12,7 +13,7 @@ class Node:
         return self.priority < other.priority
 
 actions = ["adjacentLeft", "adjacentRight", "1hopLeft", "1hopRight", "2hopLeft", "2hopRight"]
-exploredSet = []
+
 
 def childNode(parentNode, action):
     state = parentNode.state.copy()
@@ -92,18 +93,18 @@ def childNode(parentNode, action):
     else:
         return None
 
-def checkGoalState(node):
-    state = node.state
-    n = len(state)
-    foundBlack = False
-    for i in range(n):
-        if(foundBlack and state[i] == "W"):
-            return False
-        if(state[i] == "B"):
-            foundBlack = True
-        else:
-            pass
-    return True
+# def checkGoalState(node):
+#     state = node.state
+#     n = len(state)
+#     foundBlack = False
+#     for i in range(n):
+#         if(foundBlack and state[i] == "W"):
+#             return False
+#         if(state[i] == "B"):
+#             foundBlack = True
+#         else:
+#             pass
+#     return True
 
 def hsld(state):
     val = 0
@@ -122,30 +123,25 @@ def printTree(node):
         print(str(tempNode.state) + "\t"+ str(tempNode.cost))
         tempNode = tempNode.parent
 
-def hashValueFinder(state):
-    val = 0
-    for i in range(len(state)):
-        if(state[i] == "W"):
-            val += (11 * (i+1))
-        elif(state[i] == "B"):
-            val += (13 * (i+1))
-        else:
-            val += (10 * (i+1))
-
-    return val
+def getStateSet(state):
+    tState = ""
+    for s in state:
+        tState += str(s)
+    return tState
 
 
-def findSolution(initialState):
+def A_star(initialState):
     
     headNode = Node(initialState, None, None, 0, 0)
-    hashValue = hashValueFinder(headNode.state)
     
     if(checkGoalState(headNode)):
         print("Already in Goal State")
         return
-
     
     priorityQueue = []
+    exploredSet = []
+    exploredNode = []
+
     nActions = len(actions)
     
     heapq.heappush(priorityQueue,headNode)
@@ -154,25 +150,28 @@ def findSolution(initialState):
 
         parentNode = heapq.heappop(priorityQueue)
         
-        hashValue = hashValueFinder(parentNode.state)
+        state = getStateSet(parentNode.state)
         
-        try:
-            k = exploredSet.index(hashValue)
-            pass
-        except:
-            exploredSet.append(hashValue)
+        exploredSet.append(state)
+        exploredNode.append(parentNode)
         
         for i in range(nActions):
             node = childNode(parentNode, i)
             if(node != None):
                 if(checkGoalState(node)):
-                    # printTree(node)
-                    print(str(initialState) + "\tReached Goal State\t" + str(node.cost))
-                    return
+                    print(str(initialState) + "\tReached Goal State\t" + str(node.cost) + "\tH cost" + str(node.priority -  node.cost))
+                    return node
+
+                state = getStateSet(node.state)
+                
+                if(state in exploredSet):
+                    k = exploredSet.index(state)
+                    if(node.cost < exploredNode[k].cost):
+                        heapq.heappush(priorityQueue,node)
                 else:
                     heapq.heappush(priorityQueue,node)
-                    # print(node.state)
-                    # print(node.priority)
+    
+    return None
 
 def createInput(initialState):
     state = []
@@ -190,15 +189,12 @@ def createInput(initialState):
     return state      
 
 if __name__ == "__main__":
-    # initialState = input("Enter the input for Puzzle Ex: Input (WWWBBB ):\t")
+    initialState = input("Enter the input for Puzzle Ex: Input (WWWBBB ):\t")
 
-    with open("output.txt", "r") as f:
+    # with open("output.txt", "r") as f:
 
-        initialStates = f.readlines()
-        for initialState in initialStates:
-            # print(initialState)
-            findSolution(createInput(initialState))
+    #     initialStates = f.readlines()
+    #     for initialState in initialStates:
+    #         findSolution(createInput(initialState))
 
-    # state = createInput(initialState)
-    # findSolution(state)
-    
+    A_star(createInput(initialState))
