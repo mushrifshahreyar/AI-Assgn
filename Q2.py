@@ -129,7 +129,7 @@ def getStateSet(state):
     return tState
 
 
-def A_star(initialState):
+def A_star(initialState, goalStateCheck):
     
     headNode = Node(initialState, None, None, 0, 0)
     
@@ -140,8 +140,6 @@ def A_star(initialState):
     priorityQueue = []
     exploredSet = []
     exploredCost = []
-    
-    
     
     nActions = len(actions)
     val = headNode.cost + hsld(initialState)
@@ -158,10 +156,10 @@ def A_star(initialState):
         for i in range(nActions):
             node = childNode(parentNode, i)
             if(node != None):
-                if(checkGoalState(node)):
+                if(goalStateCheck(node)):
                     # printTree(node)
-                    print(str(initialState) + "\tReached Goal State\t" + str(node.cost))
-                    return node, len(exploredCost)
+                    
+                    return node, len(exploredSet)
 
                 state = getStateSet(node.state)
                 
@@ -175,7 +173,7 @@ def A_star(initialState):
                     val = node.cost + hsld(initialState)
                     heapq.heappush(priorityQueue,(val, node))
     
-    return None, 0
+    return None, len(exploredSet)
 
 def createInput(initialState):
     state = []
@@ -192,13 +190,18 @@ def createInput(initialState):
 
     return state      
 
-if __name__ == "__main__":
-    # initialState = input("Enter the input for Puzzle Ex: Input (WWWBBB ):\t")
-    # A_star(createInput(initialState))
+def readFromFile():
     with open("input.txt", "r") as f:
 
         initialStates = f.readlines()
         for initialState in initialStates:
-            A_star(createInput(initialState))
+            A_star(createInput(initialState),checkGoalState)
 
+
+if __name__ == "__main__":
+    # readFromFile()
+    initialState = input("Enter the input for Puzzle Ex: Input (WWWBBB ):\t")
+    node , exploredSet = A_star(createInput(initialState),checkGoalState)
+    print("\n" + str(initialState) + "\nReached Goal State :\t" + str(node.cost) + "\tExplored Set :\t" + str(exploredSet))
+    
     

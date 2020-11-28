@@ -90,12 +90,16 @@ def checkGoalState(node):
 
 def printTree(node):
     tempNode = node
-    
+    stack = []
     while(tempNode != None):
-        print(str(tempNode.state) + "\t"+ str(tempNode.cost))
+        stack.append(tempNode)
         tempNode = tempNode.parent
+    
+    while(len(stack) != 0):
+        tempNode = stack.pop(len(stack) - 1)
+        print(str(tempNode.state) + "\t"+ str(tempNode.cost))
 
-def BFS(initialState):
+def BFS(initialState, goalStateCheck):
     
     headNode = Node(initialState, None, None, 0)
     state = getStateSet(headNode.state)
@@ -109,30 +113,27 @@ def BFS(initialState):
 
     nActions = len(actions)
 
-    exploredNode = 0
-
     queue.append(headNode)
 
     while(len(queue) != 0):
         parentNode = queue.pop(0)
         state = getStateSet(parentNode.state)
-        exploredNode += 1
         exploredSet.append(state)
         
         for i in range(nActions):
             node = childNode(parentNode, i)
             if(node != None):
-                if(checkGoalState(node)):
+                if(goalStateCheck(node)):
                     # printTree(node)
-                    print(str(headNode.state) + "\tReached Goal State\t" + str(node.cost))
-                    return node, exploredNode
+                    
+                    return node, len(exploredSet)
                 
                 state = getStateSet(node.state)
 
                 if(state not in exploredSet):
                     queue.append(node)
                 
-    return None, exploredNode
+    return None, len(exploredSet)
 
 def getStateSet(state):
     tState = ""
@@ -155,13 +156,16 @@ def createInput(initialState):
 
     return state      
 
-
-if __name__ == "__main__":
-    # initialState = input("Enter the input for Puzzle Ex: Input (WWW BBB):\t")
+def readFromFile():
     with open("input.txt", "r") as f:
         initialStates = f.readlines()
         for initialState in initialStates:
-            BFS(createInput(initialState))
+            node, exploredStates = BFS(createInput(initialState),checkGoalState)
+            print(str(initialState) + "\tReached Goal State\t" + str(node.cost))
 
+if __name__ == "__main__":
+    # readFromFile()
     
-    # BFS(createInput(initialState))
+    initialState = input("Enter the input for Puzzle Ex: Input (WWW BBB):\t")
+    node, exploredSet = BFS(createInput(initialState),checkGoalState)
+    print("\n" + str(initialState) + "\nReached Goal State\t" + str(node.cost) + "\tExplored set\t" + str(exploredSet))

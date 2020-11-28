@@ -1,24 +1,26 @@
-from Q1 import BFS
+from Q1 import BFS, createInput, checkGoalState
 from Q2 import A_star
-from Q1 import createInput
 
 def printTree(node):
     tempNode = node
-    
+    stack = []
     while(tempNode != None):
-        print(str(tempNode.state) + "\t"+ str(tempNode.cost))
+        stack.append(tempNode)
         tempNode = tempNode.parent
+    
+    while(len(stack) != 0):
+        tempNode = stack.pop(len(stack) - 1)
+        print(str(tempNode.state) + "\t"+ str(tempNode.cost))
 
 if __name__ == "__main__":
     initialState = input("Enter the input for Puzzle Ex: Input (WWWBBB ):\t")
     
-    bfsNode, explored_BFS = BFS(createInput(initialState))
-    astarNode, explored_Astar = A_star(createInput(initialState))
+    print("\n------------BFS------------")
+    bfs_node, bfs_Explored = BFS(createInput(initialState), checkGoalState)
+    printTree(bfs_node)
+    print("\n" + str(initialState) + "\nReached Goal State :\t" + str(bfs_node.cost) + "\tExplored Set :\t" + str(bfs_Explored))
 
-    print("\n---Uninformed---")
-    printTree(bfsNode)
-    print("Explored Node = " + str(explored_BFS))
-    
-    print("\n---Informed---")
-    printTree(astarNode)
-    print("Explored Node = " + str(explored_Astar))
+    print("\n-------------A*------------")
+    astar_node, astar_Explored = A_star(createInput(initialState),checkGoalState)
+    print("\n" + str(initialState) + "\nReached Goal State :\t" + str(astar_node.cost) + "\tExplored Set :\t" + str(astar_Explored))
+    printTree(astar_node)
