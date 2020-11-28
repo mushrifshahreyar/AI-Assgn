@@ -102,35 +102,37 @@ def BFS(initialState):
     
     if(checkGoalState(headNode)):
         print("Already in Goal State")
-        return
+        return headNode, 0
 
     queue = []
     exploredSet = []
 
     nActions = len(actions)
-    
+
+    exploredNode = 0
+
     queue.append(headNode)
 
     while(len(queue) != 0):
         parentNode = queue.pop(0)
         state = getStateSet(parentNode.state)
-
+        exploredNode += 1
         exploredSet.append(state)
         
         for i in range(nActions):
             node = childNode(parentNode, i)
             if(node != None):
                 if(checkGoalState(node)):
-                    printTree(node)
+                    # printTree(node)
                     print(str(headNode.state) + "\tReached Goal State\t" + str(node.cost))
-                    return node
+                    return node, exploredNode
                 
                 state = getStateSet(node.state)
 
                 if(state not in exploredSet):
                     queue.append(node)
                 
-    return None
+    return None, exploredNode
 
 def getStateSet(state):
     tState = ""
@@ -156,7 +158,7 @@ def createInput(initialState):
 
 if __name__ == "__main__":
     # initialState = input("Enter the input for Puzzle Ex: Input (WWW BBB):\t")
-    with open("output.txt", "r") as f:
+    with open("input.txt", "r") as f:
         initialStates = f.readlines()
         for initialState in initialStates:
             BFS(createInput(initialState))

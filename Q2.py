@@ -9,7 +9,7 @@ class Node:
         self.priority = priority
 
     def __lt__(self, other):
-        return self.priority < other.priority
+        return self.cost < other.cost
 
 actions = ["adjacentLeft", "adjacentRight", "1hopLeft", "1hopRight", "2hopLeft", "2hopRight"]
 
@@ -119,7 +119,7 @@ def printTree(node):
     tempNode = node
     
     while(tempNode != None):
-        print(str(tempNode.state) + "\t"+ str(tempNode.cost) + " H value " +str(tempNode.priority))
+        print(str(tempNode.state) + "\t"+ str(tempNode.cost))
         tempNode = tempNode.parent
 
 def getStateSet(state):
@@ -135,46 +135,47 @@ def A_star(initialState):
     
     if(checkGoalState(headNode)):
         print("Already in Goal State")
-        return
+        return headNode, 0
     
     priorityQueue = []
     exploredSet = []
-    exploredNode = []
-
-    nActions = len(actions)
+    exploredCost = []
     
-    heapq.heappush(priorityQueue,headNode)
+    
+    
+    nActions = len(actions)
+    val = headNode.cost + hsld(initialState)
+    heapq.heappush(priorityQueue,(val, headNode))
     
     while(len(priorityQueue) != 0):
-        parentNode = heapq.heappop(priorityQueue)
-        for n in priorityQueue:
-            print(n.state, n.cost, n.priority)
-        print()
-        # if(len(priorityQueue) >= 1):
-        #     break
-        state = getStateSet(parentNode.state)
         
+        parentNode = heapq.heappop(priorityQueue)[-1]
+        
+        state = getStateSet(parentNode.state)
         exploredSet.append(state)
-        exploredNode.append(parentNode)
+        exploredCost.append(parentNode.cost)
         
         for i in range(nActions):
             node = childNode(parentNode, i)
             if(node != None):
                 if(checkGoalState(node)):
-                    printTree(node)
+                    # printTree(node)
                     print(str(initialState) + "\tReached Goal State\t" + str(node.cost))
-                    return node
+                    return node, len(exploredCost)
 
                 state = getStateSet(node.state)
                 
                 if(state in exploredSet):
                     k = exploredSet.index(state)
-                    if(node.cost < exploredNode[k].cost):
-                        heapq.heappush(priorityQueue,node)
+                    if(node.cost < exploredCost[k]):
+                        exploredCost[k] = node.cost
+                        val = node.cost + hsld(initialState)
+                        heapq.heappush(priorityQueue, (val, node))
                 else:
-                    heapq.heappush(priorityQueue,node)
+                    val = node.cost + hsld(initialState)
+                    heapq.heappush(priorityQueue,(val, node))
     
-    return None
+    return None, 0
 
 def createInput(initialState):
     state = []
@@ -192,12 +193,12 @@ def createInput(initialState):
     return state      
 
 if __name__ == "__main__":
-    initialState = input("Enter the input for Puzzle Ex: Input (WWWBBB ):\t")
-    A_star(createInput(initialState))
-    # with open("output.txt", "r") as f:
+    # initialState = input("Enter the input for Puzzle Ex: Input (WWWBBB ):\t")
+    # A_star(createInput(initialState))
+    with open("input.txt", "r") as f:
 
-    #     initialStates = f.readlines()
-    #     for initialState in initialStates:
-    #         A_star(createInput(initialState))
+        initialStates = f.readlines()
+        for initialState in initialStates:
+            A_star(createInput(initialState))
 
     

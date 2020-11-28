@@ -1,6 +1,5 @@
 import heapq
 from Q5_BFS import checkGoalState
-
 class Node:
     def __init__(self, state, action, parent, cost, priority):
         self.state = state
@@ -10,7 +9,7 @@ class Node:
         self.priority = priority
 
     def __lt__(self, other):
-        return self.priority < other.priority
+        return self.cost < other.cost
 
 actions = ["adjacentLeft", "adjacentRight", "1hopLeft", "1hopRight", "2hopLeft", "2hopRight"]
 
@@ -93,19 +92,6 @@ def childNode(parentNode, action):
     else:
         return None
 
-# def checkGoalState(node):
-#     state = node.state
-#     n = len(state)
-#     foundBlack = False
-#     for i in range(n):
-#         if(foundBlack and state[i] == "W"):
-#             return False
-#         if(state[i] == "B"):
-#             foundBlack = True
-#         else:
-#             pass
-#     return True
-
 def hsld(state):
     val = 0
     for i in range(len(state)):
@@ -136,42 +122,47 @@ def A_star(initialState):
     
     if(checkGoalState(headNode)):
         print("Already in Goal State")
-        return
+        return headNode, 0
     
     priorityQueue = []
     exploredSet = []
-    exploredNode = []
-
-    nActions = len(actions)
+    exploredCost = []
     
-    heapq.heappush(priorityQueue,headNode)
+    
+    
+    nActions = len(actions)
+    val = headNode.cost + hsld(initialState)
+    heapq.heappush(priorityQueue,(val, headNode))
     
     while(len(priorityQueue) != 0):
-
-        parentNode = heapq.heappop(priorityQueue)
+        
+        parentNode = heapq.heappop(priorityQueue)[-1]
         
         state = getStateSet(parentNode.state)
-        
         exploredSet.append(state)
-        exploredNode.append(parentNode)
+        exploredCost.append(parentNode.cost)
         
         for i in range(nActions):
             node = childNode(parentNode, i)
             if(node != None):
                 if(checkGoalState(node)):
-                    print(str(initialState) + "\tReached Goal State\t" + str(node.cost) + "\tH cost" + str(node.priority -  node.cost))
-                    return node
+                    # printTree(node)
+                    print(str(initialState) + "\tReached Goal State\t" + str(node.cost))
+                    return node, len(exploredCost)
 
                 state = getStateSet(node.state)
                 
                 if(state in exploredSet):
                     k = exploredSet.index(state)
-                    if(node.cost < exploredNode[k].cost):
-                        heapq.heappush(priorityQueue,node)
+                    if(node.cost < exploredCost[k]):
+                        exploredCost[k] = node.cost
+                        val = node.cost + hsld(initialState)
+                        heapq.heappush(priorityQueue, (val, node))
                 else:
-                    heapq.heappush(priorityQueue,node)
+                    val = node.cost + hsld(initialState)
+                    heapq.heappush(priorityQueue,(val, node))
     
-    return None
+    return None, 0
 
 def createInput(initialState):
     state = []
@@ -190,11 +181,11 @@ def createInput(initialState):
 
 if __name__ == "__main__":
     initialState = input("Enter the input for Puzzle Ex: Input (WWWBBB ):\t")
-
-    # with open("output.txt", "r") as f:
+    A_star(createInput(initialState))
+    # with open("input.txt", "r") as f:
 
     #     initialStates = f.readlines()
     #     for initialState in initialStates:
-    #         findSolution(createInput(initialState))
+    #         A_star(createInput(initialState))
 
-    A_star(createInput(initialState))
+    

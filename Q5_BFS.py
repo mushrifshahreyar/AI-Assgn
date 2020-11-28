@@ -170,7 +170,7 @@ def createInput(initialState):
 
 if __name__ == "__main__":
     initialState = input("Enter the input for Puzzle Ex: Input (WWW BBB):\t")
-    # with open("output.txt", "r") as f:
+    # with open("input.txt", "r") as f:
     #     initialStates = f.readlines()
     #     for initialState in initialStates:
     #         findSolution(createInput(initialState))
