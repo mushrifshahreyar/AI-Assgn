@@ -8,7 +8,7 @@ For executing the python program:
 
     1.  For first question:     python3 Q1.py
 
-    ![Screenshot](Screenshot/Q1.png)
+    ![./screenshots/Q1.png](screenshots/Q5-1.png)
 
     2.  For second question:    python3 Q2.py
 
