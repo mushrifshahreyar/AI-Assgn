@@ -140,7 +140,7 @@ def A_star(initialState, goalStateCheck):
     priorityQueue = []
     exploredSet = []
     exploredCost = []
-    
+    k = 0
     nActions = len(actions)
     val = headNode.cost + hsld(initialState)
     heapq.heappush(priorityQueue,(val, headNode))
@@ -148,7 +148,7 @@ def A_star(initialState, goalStateCheck):
     while(len(priorityQueue) != 0):
         
         parentNode = heapq.heappop(priorityQueue)[-1]
-        
+        k += 1
         state = getStateSet(parentNode.state)
         exploredSet.append(state)
         exploredCost.append(parentNode.cost)
@@ -159,7 +159,7 @@ def A_star(initialState, goalStateCheck):
                 if(goalStateCheck(node)):
                     # printTree(node)
                     
-                    return node, len(exploredSet)
+                    return node, k
 
                 state = getStateSet(node.state)
                 
@@ -202,6 +202,6 @@ if __name__ == "__main__":
     # readFromFile()
     initialState = input("Enter the input for Puzzle Ex: Input (WWWBBB ):\t")
     node , exploredSet = A_star(createInput(initialState),checkGoalState)
-    print("\n" + str(initialState) + "\nReached Goal State :\t" + str(node.cost) + "\tExplored Set :\t" + str(exploredSet))
+    print("\n" + str(initialState) + "\nReached Goal State :\t" + str(node.cost))
     
     
