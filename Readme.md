@@ -8,11 +8,11 @@ For executing the python program:
 
     1.  For first question:     python3 Q1.py
 
-        <img src="Screenshot/Q1.png" width="400px"></img> 
+        <img src="https://github.com/mushrifshahreyar/AI-Assgn/tree/main/Screenshot/Q1.png"></img> 
     
     2.  For second question:    python3 Q2.py
 
-    ![Problem 1](Screenshot/Q1.png?raw=true "Optional Title")
+    ![Screenshot](Screenshot/Q1.png?raw=true "Optional Title")
 
     3.  For third question:     python3 Q3.py
 
