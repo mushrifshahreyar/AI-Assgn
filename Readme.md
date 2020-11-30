@@ -8,7 +8,7 @@ For executing the python program:
 
     1.  For first question:     python3 Q1.py
 
-        <img src="Screenshot/Q1.png" raw=true></img> 
+        <img src="Screenshot/Q1.png" raw=true> 
     
     2.  For second question:    python3 Q2.py
 
