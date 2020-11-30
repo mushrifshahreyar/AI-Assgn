@@ -8,7 +8,9 @@ For executing the python program:
 
     1.  For first question:     python3 Q1.py
 
-    ![./Screenshot/Q1.png](Screenshot/Q1.png)
+    <div align="center">
+        <img src="/Screenshot/Q1.png" width="400px"</img> 
+    </div>
 
     2.  For second question:    python3 Q2.py
 
