@@ -8,7 +8,7 @@ For executing the python program:
 
     1.  For first question:     python3 Q1.py
 
-        <img src="https://github.com/mushrifshahreyar/AI-Assgn/tree/main/Screenshot/Q1.png"></img> 
+        <img src="Screenshot/Q1.png" raw=true></img> 
     
     2.  For second question:    python3 Q2.py
 
