@@ -8,10 +8,8 @@ For executing the python program:
 
     1.  For first question:     python3 Q1.py
 
-        <div align="center">
-            <img src="./Screenshot/Q1.png" width="400px"</img> 
-        </div>
-
+        <img src="Screenshot/Q1.png" width="400px"</img> 
+    
     2.  For second question:    python3 Q2.py
 
     ![Problem 1](Screenshot/Q1.png?raw=true "Optional Title")
