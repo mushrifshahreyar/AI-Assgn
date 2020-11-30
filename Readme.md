@@ -12,7 +12,7 @@ For executing the python program:
     
     2.  For second question:    python3 Q2.py
 
-    ![Screenshot](./Screenshot/Q2.png)
+    ![Screenshot](../main/Screenshot/Q1.png)
 
     3.  For third question:     python3 Q3.py
 
