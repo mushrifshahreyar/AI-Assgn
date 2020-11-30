@@ -8,7 +8,7 @@ For executing the python program:
 
     1.  For first question:     python3 Q1.py
 
-    ![Problem 1](Screenshot/Q1.png?raw=true "Optional Title")
+    ![Problem 1](Screenshot/Q1.png "Optional Title")
 
     2.  For second question:    python3 Q2.py
 
